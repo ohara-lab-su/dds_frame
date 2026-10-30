@@ -1,0 +1,2 @@
+cyclonedds>=0.10,<1
+msgpack>=1.0,<2
