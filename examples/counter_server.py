@@ -1,22 +1,19 @@
 from dds_frame import DeviceServer
+from counter_device import Counter
 
 
-class Counter:
-    def __init__(self):
-        self.value = 0
-
-    def increment(self, amount=1):
-        self.value += amount
-        return self.value
-
-    def read(self):
-        return self.value
+def main():
+    device = Counter()
+    server = DeviceServer("counter", device)
+    try:
+        print("DDS counter server running", flush=True)
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.stop()
+        server.close()
 
 
 if __name__ == "__main__":
-    with DeviceServer("counter", Counter(), allowed_methods={"increment", "read"}) as server:
-        print("DDS counter server running")
-        try:
-            server.serve_forever()
-        except KeyboardInterrupt:
-            pass
+    main()
