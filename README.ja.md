@@ -1,16 +1,32 @@
 # dds_frame
 
-[![en](https://img.shields.io/badge/lang-en-red.svg)](https://ohara-lab-su.github.io/dds_frame/en/index.html)
-[![ja](https://img.shields.io/badge/lang-ja-blue.svg)](https://ohara-lab-su.github.io/dds_frame/ja/index.html)
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/ohara-lab-su/dds_frame/blob/main/README.md)
+[![ja](https://img.shields.io/badge/lang-ja-blue.svg)](https://github.com/ohara-lab-su/dds_frame/blob/main/README.ja.md)
 
 [![GitHub](https://img.shields.io/badge/GitHub-ohara--lab--su%2Fdds_frame-181717?logo=github)](https://github.com/ohara-lab-su/dds_frame/)
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Documentation-222222?logo=githubpages&logoColor=white)](https://ohara-lab-su.github.io/dds_frame/ja/)
 [![Ohara Lab](https://img.shields.io/badge/Ohara%20Lab-Home-4B5563?logo=homeassistant&logoColor=white)](https://ohara-lab-su.github.io/index.html)
 
-ROS 2に依存しないDDSネイティブのPython通信フレームです。CycloneDDSによる同期RPCとPublish/Subscribeを提供します。DDS RouterやROS 2互換Serviceは未実装です。
+
+> **テスト段階（実運用非推奨）**
+>
+> 現在は最低限のテストしか実施していません。DDS Pub/Subによる基本的なデータ受信は確認されていますが、受信時に
+> `InvalidSample`
+> による例外が発生した事例があります。その修正後の実通信検証は完了していません。RPCを含む各通信機能の網羅的な動作検証、異常系・長時間運転・複数端末間の検証も完了していません。安定動作を保証できる段階ではありません。
+
+既存のPython制御クラスを通信方式から独立させたまま、DDSで公開するための軽量な通信フレームです。`ese774_frame`、`grpc_frame`
+と並ぶ独立した選択肢であり、SUSANOO全体をDDSに置き換えるものではありません。
+
+- 透過型RPC：既存の制御クラスを`DeviceServer`に渡し、`DeviceClient`から元のメソッド名で呼び出します。
+- DDS Pub/Sub：`Publisher`と`Subscriber`で、RPCとは独立した一対多・多対多のデータ配信を行います。
+- 制御クラスのAPIを統一・再定義しません。通信の知識を制御クラスに持ち込みません。
 
 ```bash
 python -m pip install .
 ```
 
-詳細は[GitHub Pages](https://ohara-lab-su.github.io/dds_frame/ja/)を参照してください。
+実行方法：[examples/README.md](examples/README.md)
+
+設計と制約：[docs/ja/design.md](docs/ja/design.md)
+
+**既知の制約：** QoS設定の公開、ROS 2との相互運用、デバイス専用`.pyi`生成、厳密なexactly-once実行保証は提供していません。

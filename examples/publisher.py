@@ -1,8 +1,16 @@
 import time
 from dds_frame import Publisher
 
-if __name__ == "__main__":
-    with Publisher("counter/state") as pub:
+
+def main():
+    publisher = Publisher("counter/state")
+    try:
         for value in range(10):
-            pub.publish({"value": value})
+            publisher.publish({"value": value})
             time.sleep(1)
+    finally:
+        publisher.close()
+
+
+if __name__ == "__main__":
+    main()

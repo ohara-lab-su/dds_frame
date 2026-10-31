@@ -1,6 +1,16 @@
 from dds_frame import Subscriber
 
-if __name__ == "__main__":
-    with Subscriber("counter/state") as sub:
+
+def main():
+    subscriber = Subscriber("counter/state")
+    try:
         while True:
-            print(sub.receive())
+            print(subscriber.receive())
+    except KeyboardInterrupt:
+        pass
+    finally:
+        subscriber.close()
+
+
+if __name__ == "__main__":
+    main()
