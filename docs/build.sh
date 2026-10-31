@@ -30,7 +30,6 @@ sphinx-build -b html -c "$DOCS_DIR" -D language=en "$DOCS_DIR/en" "$BUILD_DIR/en
 sphinx-build -b html -c "$DOCS_DIR" -D language=ja "$DOCS_DIR/ja" "$BUILD_DIR/ja"
 
 for page in index.html en/index.html ja/index.html \
-  guide/install.html en/guide/install.html ja/guide/install.html \
   api/index.html en/api/index.html ja/api/index.html \
   api/modules.html en/api/modules.html ja/api/modules.html; do
   if [[ ! -f "$BUILD_DIR/$page" ]]; then

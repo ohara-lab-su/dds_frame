@@ -9,10 +9,22 @@ description = "DDS-native request/reply and publish/subscribe communication fram
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"
-authors = [{ name = "Ohara Lab" }]
-keywords = ["DDS", "CycloneDDS", "RPC", "publish-subscribe", "device-control"]
+authors = [
+    { name = "K.NAKADA" }
+]
+keywords = [
+    "DDS",
+    "CycloneDDS",
+    "RPC",
+    "publish-subscribe",
+    "device-control",
+]
 classifiers = ["Programming Language :: Python :: 3", "License :: OSI Approved :: Apache Software License", "Operating System :: OS Independent"]
-dependencies = ["cyclonedds>=0.10,<1", "msgpack>=1.0,<2"]
+
+dependencies = [
+    "cyclonedds>=11.0.1,<12",
+    "msgpack>=1.0,<2",
+]
 
 [project.urls]
 Homepage = "https://github.com/ohara-lab-su/dds_frame"

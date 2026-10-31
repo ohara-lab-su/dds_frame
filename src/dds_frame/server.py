@@ -11,7 +11,9 @@ class DeviceServer:
     def __init__(self, name: str, device, *, domain_id: int = 0, allowed_methods=None):
         self.name = name
         self.device = device
-        self.allowed_methods = set(allowed_methods) if allowed_methods is not None else None
+        if allowed_methods is None:
+            raise ValueError("allowed_methods must be explicitly specified")
+        self.allowed_methods = set(allowed_methods)
         self._dp = participant(domain_id)
         self._req = reader(self._dp, f"dds_frame/{name}/request")
         self._res = writer(self._dp, f"dds_frame/{name}/response")
@@ -19,7 +21,7 @@ class DeviceServer:
 
     def dispatch(self, method: str, args: list, kwargs: dict):
         """通信非依存のデバイス呼び出し。"""
-        if method.startswith("_") or (self.allowed_methods is not None and method not in self.allowed_methods):
+        if method.startswith("_") or method not in self.allowed_methods:
             raise AttributeError(f"method not published: {method}")
         fn = getattr(self.device, method)
         if not callable(fn):

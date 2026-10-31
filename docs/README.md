@@ -16,3 +16,4 @@ This project follows the shared Sphinx + MyST + Read the Docs theme layout used 
 - `.github/workflows/pages.yml`: deploys the Sphinx output from `main`.
 
 Run `bash docs/build.sh` after installing `sphinx myst-parser sphinx-rtd-theme linkify-it-py` and project dependencies.
+

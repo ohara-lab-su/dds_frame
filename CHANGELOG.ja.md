@@ -1,8 +1,9 @@
-# CHANGELOG
+# 変更履歴
 
-## 0.0.0 - 2026-10-30
+## 0.0.0
 
-- CycloneDDS Pythonを用いた独立DDSフレームの初期実装。
-- 相関ID付きRPC、Pub/Sub、同期クライアント、サーバーを追加。
-- GitHub Pages用MkDocsドキュメントとCIを追加。
-- ROS 2との相互運用は設計資料のみ。直接互換は未実装。
+- CycloneDDS依存関係を11系へ変更しました。
+- Sphinx/MySTによるGitHub Pagesと日英ナビゲーションを維持しました。
+- Subscriberの複数サンプル受信時の取りこぼしを修正しました。
+- RPC公開メソッドの明示指定を必須としました。
+- DDS Discoveryと実装上の制約を記載しました。
