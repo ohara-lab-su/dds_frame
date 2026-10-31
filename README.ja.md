@@ -1,8 +1,17 @@
 # dds_frame
 
-DDSネイティブの通信フレーム。ROS 2を必要とせず、DDSのRequest/Reply型RPCとPublish/Subscribe型配信をPythonから利用します。初期実装はCycloneDDS Pythonを使用します。
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/ohara-lab-su/dds_frame/blob/main/README.md)
+[![ja](https://img.shields.io/badge/lang-ja-yellow.svg)](https://github.com/ohara-lab-su/dds_frame/blob/main/README.ja.md)
 
-> **開発初期版 (0.1.0)**: API・ワイヤ形式はまだ安定していません。実機制御や安全系への導入前に、ネットワーク、QoS、タイムアウト、異常系の検証が必要です。
+[![GitHub](https://img.shields.io/badge/GitHub-ohara--lab--su%2Fdds_frame-181717?logo=github)](https://github.com/ohara-lab-su/dds_frame/)
+[![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Documentation-222222?logo=githubpages&logoColor=white)](https://ohara-lab-su.github.io/dds_frame/ja/)
+[![Ohara Lab](https://img.shields.io/badge/Ohara%20Lab-Home-4B5563?logo=homeassistant&logoColor=white)](https://ohara-lab-su.github.io/)
+
+DDSネイティブの通信フレーム。ROS 2を必要とせず、DDSのRequest/Reply型RPCとPublish/Subscribe型配信をPythonから利用します。初期実装はCycloneDDS
+Pythonを使用します。
+
+> **開発初期版 (0.0.0)**: API・ワイヤ形式はまだ安定していません。
+> 実機制御や安全系への導入前に、ネットワーク、QoS、タイムアウト、異常系の検証が必要です。
 
 ## 導入
 
@@ -19,14 +28,18 @@ Python依存パッケージは通常の`pip install`で導入します。Cyclone
 ```python
 from dds_frame import DeviceServer
 
+
 class Counter:
     def __init__(self):
         self.value = 0
+
     def increment(self, amount=1):
         self.value += amount
         return self.value
+
     def read(self):
         return self.value
+
 
 with DeviceServer("counter", Counter()) as server:
     server.serve_forever()
@@ -55,14 +68,15 @@ with Subscriber("counter/state") as sub:
     print(sample)
 ```
 
-PublisherとSubscriberは別プロセスで動作させてください。受信側のDiscovery完了前に送信したデータは既定のVOLATILE QoSでは失われ得ます。
+PublisherとSubscriberは別プロセスで動作させてください。受信側のDiscovery完了前に送信したデータは既定のVOLATILE
+QoSでは失われ得ます。
 
 ## 設計上の境界
 
 - デバイスクラスにDDSの型・Publisher・Subscriberを要求しません。
 - `DeviceServer`がデバイスオブジェクトを呼び出し、通信例外とデバイス例外を分離します。
 - RPCは要求と応答の相関IDを使用します。Pub/SubはRPCの代替ではなく独立した通信モデルです。
-- ROS 2のTopic/Service/Actionへの直接接続は**この版では未対応**です。DDS利用だけではROS 2互換になりません。
+- ROS 2のTopic/Service/Actionへの直接接続は **この版では未対応**です。DDS利用だけではROS 2互換になりません。
 - ネットワーク越しの認証・暗号化、任意の公開メソッドの実行制限は実運用時に設計が必要です。信頼できるネットワーク内での評価を想定しています。
 
 詳しくは[設計文書](docs/design.md)、[API](docs/reference/api.md)、[互換性](docs/compatibility.md)を参照してください。
