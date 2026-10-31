@@ -1,11 +1,18 @@
 # インストール
 
+Python 3.10以上を使用します。標準のインストール方法は次のとおりです。
+
 ```bash
-python -m pip install dds-frame
+python -m pip install .
 ```
 
-開発時は`python -m pip install -e .`。Pythonパッケージの依存は`pyproject.toml`の標準`dependencies`に記載し、optional dependenciesは使いません。
+`pyproject.toml` の標準依存関係に `cyclonedds>=11.0.1,<12` と `msgpack>=1.0,<2` を記載しています。CycloneDDSの対応wheelが利用可能な環境ではネイティブライブラリの個別導入は不要です。
 
-ネイティブCycloneDDSライブラリの導入状況はOS・配布wheelに依存します。インストール後は`python -c "import cyclonedds; import dds_frame"`で確認してください。
+対応wheelがないプラットフォームではソースビルドが必要になる場合があります。DDS SecurityおよびIceoryx共有メモリ通信は通常のwheelに含まれません。
 
-送受信プロセスは同じDDS Domain IDを指定してください。異なるマシンではDiscoveryのためのネットワーク設定も必要です。
+```bash
+python -c "import cyclonedds, dds_frame; print(dds_frame.__version__)"
+python -m pytest -q
+```
+
+`requirements.txt` は `-e .` として `pyproject.toml` の依存関係を参照します。

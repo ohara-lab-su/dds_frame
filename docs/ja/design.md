@@ -39,3 +39,16 @@ RPC Topic: `dds_frame/<device>/request`, `dds_frame/<device>/response`。Pub/Sub
 - 動的Discoveryに基づくサービス一覧・スキーマ配信
 
 将来の互換性検討ではROS 2のTopic名の`rt/`マッピング、IDL型名と型ハッシュ、XCDR表現、QoS、Serviceの要求応答規約を別々に検証します。DDS実装を同じにするだけではROS 2互換にはなりません。
+
+
+## 現在の実装範囲と制約
+
+本版はCycloneDDS 11系のDDS Participantを使う同期RPCおよびPub/Subの初期実装です。DDSルーティング機能、異なるDomain間の自動中継、ROS 2のService/Action互換、DDS-RPC標準への準拠は実装していません。
+
+RPCはデバイス名に対応する要求・応答Topicを使用します。同一デバイス名で複数サーバーを起動すると、要求が複数サーバーで実行され得るため、**同一デバイス名につきサーバーは1プロセス**を前提とします。複数クライアントの要求を並列に処理する保証もありません。
+
+公開メソッドは`allowed_methods`で明示します。デバイスクラス自身にDDS固有のAPIを要求しません。
+
+DDSのDiscoveryは非同期です。初回の書き込みがReaderとのマッチング前に行われると、デフォルトのVOLATILE QoSでは失われ得ます。初回RPCではタイムアウトを考慮し、運用前に接続確立とQoSの検証が必要です。
+
+MsgPackで符号化した任意のPython値をDDS IDLのバイト列に格納する方式は、DDSの型付きデータ空間を完全には活用しません。将来の型付きTopic対応とROS 2相互運用は別の設計課題です。

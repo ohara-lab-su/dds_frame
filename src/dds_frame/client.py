@@ -19,7 +19,6 @@ class DeviceClient:
         self._req = writer(self._dp, f"dds_frame/{name}/request")
         self._res = reader(self._dp, f"dds_frame/{name}/response")
         self._lock = threading.Lock()
-        self._pending = {}
 
     def call(self, method: str, *args, timeout: float | None = None, **kwargs):
         """指定メソッドをリモート実行する。同期呼び出しはロックで直列化。"""
@@ -30,15 +29,13 @@ class DeviceClient:
         with self._lock:
             self._req.write(message)
             while time.monotonic() < limit:
-                cached = self._pending.pop(request_id, None)
-                if cached is not None:
-                    return self._decode(cached)
                 for sample in self._res.take():
                     if sample.sender_id != self.sender_id:
                         continue
                     if sample.request_id == request_id:
                         return self._decode(sample)
-                    self._pending[sample.request_id] = sample
+                    # 別要求への応答は本クライアントの同期呼び出しでは保持しない。
+                    # タイムアウト済み要求への遅延応答も破棄する。
                 time.sleep(0.005)
         raise RequestTimeout(f"{self.name}.{method}: timeout")
 
